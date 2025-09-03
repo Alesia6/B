@@ -67,16 +67,8 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.post('/logout', (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: 'Could not log out'});
-
-        }
-        res.clearCookie('connect.sid');
-        res.json({ message: 'Logged out'});
-    });
+app.get('/withdraw', requireLogin, (req, res) => {
+    res.render('withdraw');
 });
 
 app.post('/withdraw', requireLogin, async (req, res) =>{
@@ -117,7 +109,7 @@ await conn.query(
 
 await conn.commit();
 
-res.json({ message: 'Withdrawn', balance: Number(newBalance)});
+res.redirect('/dashboard');
 } catch (err) {
 
    await conn.rollback();
@@ -127,6 +119,11 @@ res.json({ message: 'Withdrawn', balance: Number(newBalance)});
     } finally {
         conn.release();
 }
+});
+
+
+app.get('/deposit', requireLogin, (req, res) => {
+    res.render('deposit');
 });
 
 app.post('/deposit', requireLogin, async (req, res) => {
@@ -158,8 +155,7 @@ app.post('/deposit', requireLogin, async (req, res) => {
     );
 
     await conn.commit();
-    res.json({ message: 'Deposited', balance: Number(newBalance) });
-
+     res.redirect('/dashboard');
  } catch (err) {
     await conn.rollback();
     console.error('Deposit error:', err);
@@ -204,7 +200,7 @@ app.get('/transactions', requireLogin, async (req, res) => {
         created_at: row.created_at
     }));
 
-    res.json(transactions);
+    res.render('transactions', { transactions: transactions });
     
     } catch (err) {
         console.error('Transactions failed to fetch', err);
@@ -229,6 +225,19 @@ app.get('/dashboard', requireLogin, async (req, res) => {
         res.redirect('/login');
     }
  });
+
+ app.post('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Could not log out'});
+
+        }
+        res.clearCookie('connect.sid');
+        res.redirect('/login');
+    });
+});
+
 
 
 app.listen(PORT, () =>{

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History</title>
+</head>
+<body>
+    <a href="/dashboard">Back to Dashboard</a>
+    <br><br>
+    <% if (transactions.length === 0) { %>
+    <p>No transactions found</p>
+    <%  } else { %>
+        <div>
+    <label>Show last: </label>
+    <a href="/transactions?limit=5">5</a> |
+    <a href="/transactions?limit=25">25</a> | 
+    <a href="/transactions?limit=50">50</a>
+</div>
+<br>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Date & Time</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Balance After</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% transactions.forEach(function(transaction) { %>
+                <tr>
+                    <td><%= transaction.created_at %></td>
+                    <td><%= transaction.type %></td>
+                    <td><%= transaction.amount %></td>
+                    <td><%= transaction.balance_after %></td>
+
+                </tr>
+          <% }); %>
+
+        </tbody>
+    </table>
+
+        <% } %>
+</body>
+</html>

@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Withdraw money</title>
+    <title>Deposit money</title>
 </head>
 <body>
-    <h1>Withdraw money</h1>
-    <form action="/withdraw" method="POST">
+    <h1>Deposit Money</h1>
+    <form action="/deposit" method="POST">
         <label>Amount</label>
         <input type="number" name="amount" step="0.01" min="0.01" required>
-        <button type="submit">Withdraw</button>
+        <button type="submit">Deposit</button>
     </form>
     <br>
-    <a href="/dashboard"> Back to Dashboard</a>
-    
+    <a href="/dashboard">Back to Dashboard</a>
 </body>
 </html>
