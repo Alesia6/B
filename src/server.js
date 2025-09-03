@@ -4,10 +4,14 @@ const express = require('express');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const pool = require('./db');
+
 const { REFUSED } = require('dns');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
@@ -31,6 +35,10 @@ function requireLogin(req, res, next) {
     next();
 }
 
+app.get('/login', (req, res) => {
+  res.render('login', { error: null }); 
+});
+
 app.post('/login', async (req, res) => {
     try {
         const  { cardNumber, pin } = req.body;
@@ -52,7 +60,7 @@ app.post('/login', async (req, res) => {
         }
 
         req.session.accountId = rows[0].id;
-        res.json({ message: 'Logged in'});
+       res.redirect('/dashboard');
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });
@@ -203,6 +211,24 @@ app.get('/transactions', requireLogin, async (req, res) => {
         res.status(500).json({error: 'Failed to retrieve transactions'});
     }
 });
+
+
+app.get('/dashboard', requireLogin, async (req, res) => {
+    try {
+        const [rows] = await pool.query(
+            'SELECT balance from accounts WHERE id= ?',
+            [req.session.accountId]
+        );
+
+        res.render('dashboard', {
+            balance: rows[0].balance,
+            accountId: req.session.accountId
+        });
+    } catch (err) {
+        console.error('Dashboard error', err);
+        res.redirect('/login');
+    }
+ });
 
 
 app.listen(PORT, () =>{
