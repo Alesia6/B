@@ -4,23 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+ <link rel="stylesheet" href="/css/dashboard.css">
+
 </head>
 <body>
+    <div class="container">
     <h1>Welcome to your account</h1>
+
+    <div class="card">
     <p>Account ID: <%= accountId %></p>
-    <p>Account Balance: <%= balance %> $</p>
- 
-    <h2>Actions</h2>
-    <ul>
-        <li><a href="/withdraw">Withdraw Money</a></li>
-        <li><a href="/deposit">Deposit Money</a></li>
-        <li><a href="/transactions">View Transactions</a></li>
+    <p><strong>Account Balance:</strong> <%= balance %> $</p>
+ </div>
+
+ <div class="actions">
+    <h2>Actions</h2><br>
+    
+        <a href="/withdraw" class="btn btn-action">Withdraw Money</a> <br><br><br>
+        <a href="/deposit" class="btn btn-action">Deposit Money</a><br><br><br>
+        <a href="/transactions" class="btn btn-action">View Transactions</a><br><br><br>
 
   
+        </div>
 
-    </ul>
-      <form action="/logout" method="POST" >
-        <button type="submit">Logout</button>
+    
+      <form action="/logout" method="POST">
+        <button class="btn btn-logout" type="submit">Logout</button>
     </form>
+    </div>
 </body>
 </html>
